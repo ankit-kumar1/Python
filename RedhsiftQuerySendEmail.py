@@ -8,23 +8,27 @@ from sqlalchemy import create_engine
 import pandas
 from datetime import datetime, timedelta
 
+
+###add current date to filename ##########################
 now = datetime.now()
 datepart = "%d%02d%02d"%(now.year,now.month,now.day)
+
+##connect to database ####################################
 engine = create_engine('postgres://user:pswd@localhost:1234/database')
+
+##run the query and save to dataframe ####################
 data_frame = pandas.read_sql_query("select * from sales query;", engine)
 
+### add quotes to the columns(optional)####################
 data_frame.abs_period = data_frame.abs_period.apply('"{}"'.format)
-print data_frame['abs_period']
-print data_frame.dtypes
 
-
+### convert to csv file#####################################
 data_frame.to_csv("/Users/ankitkumar/Weekly_Sales - "+datepart+".csv")
 
+#### Emailing details #####################################
 fromaddr = "abc.xyz@gmail.com"
 toaddr = ['ankit@plated.com', 'steven@facebook.com', 'absx@google.com']
-
 msg = MIMEMultipart()
-
 msg['From'] = fromaddr
 msg['To'] = ", ".join(toaddr)
 msg['Subject'] = "Weekly Sales - "+datepart
@@ -32,7 +36,6 @@ msg['Subject'] = "Weekly Sales - "+datepart
 body = "FYI,find attachment!"
 
 msg.attach(MIMEText(body, 'plain'))
-
 
 filename = "Weekly_Sales - "+datepart+".csv"
 attachment = open("/Users/ankitkumar/"+filename, "rb")
