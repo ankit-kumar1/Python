@@ -1,6 +1,7 @@
 import psycopg2
 
 ##### unload the data to S3. can be used to backup the entire schema. table names can be retrieved using a query or entered manually
+####loops through a list of tables to run the same process. actually, the query can be replaced. good for adding/removing columns/tables or backing to S3 for data lake purposes
 table_names = ['table1','table2']
 redshift_conn = psycopg2.connect(user='admin',
                                  password='password',
